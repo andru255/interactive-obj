@@ -73,8 +73,25 @@ function onDocumentMouseDown(event) {
         readUserData(intersects[ 0 ].object.userData);
 	}
 }
+function onTouch() {
+    mouse.x = (event.changedTouches[0].clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.changedTouches[0].clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+	// create an array containing all objects in the scene with which the ray intersects
+    var intersects = raycaster.intersectObjects(targetList, true);
+	
+	// if there is one (or more) intersections
+	if ( intersects.length > 0 )
+	{
+        readUserData(intersects[ 0 ].object.userData);
+	}
+}
 // when the mouse moves, call the given function
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+document.addEventListener( 'touchend', onTouch, false );
+
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;

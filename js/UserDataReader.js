@@ -7,14 +7,18 @@ var readUserData = function(dataObject) {
     }
     if (showInfoBlock) {
         infoBlock.show();
-        console.log(";D")
         return
     }
     infoBlock.hide();
 }
 
 $(document).ready(function() {
+
     $(".close").on("click", function(){
+        var $parent = $("." + $(this).attr('parent'));
+        $parent.hide();
+    });
+    $(".close").on("touchend", function(){
         var $parent = $("." + $(this).attr('parent'));
         $parent.hide();
     });
