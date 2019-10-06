@@ -1,4 +1,4 @@
-var fileName = '14098_Propane_Tank_V1_l3';
+var fileName = 'BALON_lowpoly';
 var folderName = 'assets/';
 
 var scene = new THREE.Scene();
@@ -15,40 +15,61 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMapSoft = true;
 document.body.appendChild(renderer.domElement);
 
-var mtlLoader = new THREE.MTLLoader();
-var objLoader = new THREE.OBJLoader();
-mtlLoader.setPath(folderName);
-mtlLoader.load(fileName + '.mtl', function(materials){
-    materials.preload();
-    objLoader.setMaterials(materials);
-    objLoader.setPath('assets/');
-    objLoader.load('/' + fileName + '.obj', function (object) {
-        scene.add(object);
-        object.position.y -= 70; //positioning the model in the scene
-        object.position.x += 10;
+var controls;
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+var targetList = [];
 
-        var light = new THREE.PointLight( 0xff0000, 1, 100 ); // light type
-        light.position.set( 50, 50, 50 ); // light position
-        scene.add( light ); //adding light to scene
-    });
+var objBallon = new Ballon(fileName, folderName);
+objBallon.create(function(object){
+    scene.add(object);
+    object.position.y -= 70; //positioning the model in the scene
+    object.position.x = 10;
+
+    object.rotation.y = -9.45;
+
+    var light = new THREE.PointLight( 0xff0000, 1, 100 ); // light type
+    light.position.set( 50, 50, 100 ); // light position
+    scene.add( light ); //adding light to scene
+});
+
+var Annotation = new Annotation();
+Annotation.create(function(obj){
+    scene.add(obj);
+    targetList.push(obj);
 });
 
 var init = function() {
-//    // create a cube and add to scene
-//    var cubeGeometry = new THREE.BoxGeometry(10 * Math.random(), 10 * Math.random(), 10 * Math.random());
-//    var cubeMaterial = new THREE.MeshNormalMaterial();
-//    var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-//    scene.add(cube);
-//    // position and point the camera to the center of the scene
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
     camera.position.x = 0;
     camera.position.y = 0;
-    camera.position.z = -200;
+    camera.position.z = +300;
     camera.lookAt(new THREE.Vector3(0,0,0));
-//    // add the output of the renderer to the html element
-//    // call the render function
     render();
 }
 window.onload = init;
+
+function onDocumentMouseDown(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = (event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+	// create an array containing all objects in the scene with which the ray intersects
+    var intersects = raycaster.intersectObjects(scene.children, true);
+    
+    console.log("intersects", intersects);
+	
+	// if there is one (or more) intersections
+	if ( intersects.length > 0 )
+	{
+		console.log("Hit @ " + toString( intersects[0].point ) );
+		// change the color of the closest face.
+		intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
+		intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
+	}
+}
+// when the mouse moves, call the given function
+document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
 var update = function() {}
 var render = function() {
