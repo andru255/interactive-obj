@@ -70,8 +70,7 @@ function onDocumentMouseDown(event) {
 	// if there is one (or more) intersections
 	if ( intersects.length > 0 )
 	{
-        console.log(intersects[ 0 ].object.parent.userData);
-        readUserData(intersects[ 0 ].object.parent.userData);
+        readUserData(intersects[ 0 ].object.userData);
 	}
 }
 // when the mouse moves, call the given function
