@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Example Loader</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css" />    
 </head>
 <body>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="http://threejs.org/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three-addons@1.2.0/build/three-addons.min.js?v=0"></script>
 	<script src="http://threejs.org/examples/js/loaders/OBJLoader.js"></script>
@@ -16,6 +19,24 @@
 
     <script src="/js/Ballon.js"></script>
     <script src="/js/Annotation.js"></script>
+    <script src="/js/UserDataReader.js"></script>
     <script src="/index.js"></script>
+    <div id="container"></div>
+    <div class="info-option block" style="display:none">
+        <div class="card">
+            <div class="card-header">
+                Featured
+            <button type="button" class="close" aria-label="Close" parent="info-option">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

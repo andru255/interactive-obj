@@ -5,14 +5,16 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth/window.innerHeight,
-    0.1,
+    .1,
     1000);
     // create a render, sets the background color and the size
 var renderer = new THREE.WebGLRenderer();
 renderer.setClearColor(0xcdcdcd, .5);
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
+//renderer.shadowMap.enabled = true;
+
 renderer.shadowMapSoft = true;
+var container = document.getElementById('container');
 document.body.appendChild(renderer.domElement);
 
 var controls;
@@ -35,8 +37,14 @@ objBallon.create(function(object){
 
 var Annotation = new Annotation();
 Annotation.create(function(obj){
-    scene.add(obj);
+    console.log("CREATED");
+    obj.position.y = 50;
+    obj.position.x = 60;
+    obj.position.z = 50;
+    obj.userData = {"isInfoClicked": true};
+    obj.scale.set(2, 2, 2);
     targetList.push(obj);
+    scene.add(obj);
 });
 
 var init = function() {
@@ -50,26 +58,31 @@ var init = function() {
 window.onload = init;
 
 function onDocumentMouseDown(event) {
+    event.preventDefault();
+
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = (event.clientY / window.innerHeight) * 2 + 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
 	// create an array containing all objects in the scene with which the ray intersects
-    var intersects = raycaster.intersectObjects(scene.children, true);
-    
-    console.log("intersects", intersects);
+    var intersects = raycaster.intersectObjects(targetList, true);
 	
 	// if there is one (or more) intersections
 	if ( intersects.length > 0 )
 	{
-		console.log("Hit @ " + toString( intersects[0].point ) );
-		// change the color of the closest face.
-		intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 ); 
-		intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
+        console.log(intersects[ 0 ].object.parent.userData);
+        readUserData(intersects[ 0 ].object.parent.userData);
 	}
 }
 // when the mouse moves, call the given function
 document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.updateProjectionMatrix();
+};
+window.addEventListener('resize', onWindowResize, false);
 
 var update = function() {}
 var render = function() {
